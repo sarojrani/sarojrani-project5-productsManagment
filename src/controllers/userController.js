@@ -46,7 +46,7 @@ const userRegister = async (req, res) => {
                 status: false,
                 message: "lastname should only contain alphabet",
             })
-
+/***************************Email, Phone & Password Validations******************/
         if (!isValid(email)) return res.status(400).send({ status: false, Message: "Please provide your email address" })
 
         if (!isValid(phone))
@@ -54,10 +54,27 @@ const userRegister = async (req, res) => {
                 status: false,
                 Message: "Please provide your phone number",
             })
-
+        
         if (!isValid(password)) return res.status(400).send({ status: false, Message: "Please provide your password" })
 
         if (!isValid(address)) return res.status(400).send({ status: false, Message: " Address must be provide" })
+
+        let emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+        let phoneRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
+
+        if (!email.trim().match(emailRegex))
+            return res.status(400).send({ status: false, message: "Please enter valid email" })
+
+        if (!phone.trim().match(phoneRegex))
+            return res.status(400).send({ status: false, message: "Please enter valid phone number" })
+
+        if (!isValidPassword(password))
+            return res.status(400).send({
+                status: false,
+                message: "Please provide a valid password ,Password should be of 8 - 15 characters",
+            })
+
+///////////////---------Address Validation-----///////////////////////////////////////////////////
 
         let jsonAddress = JSON.parse(address)
         if (typeof jsonAddress != "object")
@@ -120,23 +137,6 @@ const userRegister = async (req, res) => {
             }
         }
 
-        /***************************Email, Phone & Password Validations******************/
-
-        let emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
-        let phoneRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
-
-        if (!email.trim().match(emailRegex))
-            return res.status(400).send({ status: false, message: "Please enter valid email" })
-
-        if (!phone.trim().match(phoneRegex))
-            return res.status(400).send({ status: false, message: "Please enter valid phone number" })
-
-        if (!isValidPassword(password))
-            return res.status(400).send({
-                status: false,
-                message: "Please provide a valid password ,Password should be of 8 - 15 characters",
-            })
-
         /************************************Check duplicity*****************/
 
         const isRegisterEmail = await userModel.findOne({ email: email })
@@ -183,7 +183,7 @@ const loginUser = async function (req, res) {
         }
         if (!isValid(email)) return res.status(400).send({ status: false, msg: "email must be given" })
             // Email Validation
-        if (!email.trim().match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/))
+        if (!email.trim().match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/))
             return res.status(400).send({ status: false, message: "Please enter valid email" })
 
         if (!isValid(password)) return res.status(400).send({ status: false, msg: "password must be given" })  // Passsword Validation
