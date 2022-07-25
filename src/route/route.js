@@ -8,6 +8,7 @@ const userController = require("../controllers/userController")
 router.post('/register', userController.userRegister);
 router.post("/login",userController.loginUser)
 router.get("/user/:userId/profile",middleware,userController.getUserProfile)
+router.put('/user/:userId/profile',middleware, userController.updateUser)
 
 
 
