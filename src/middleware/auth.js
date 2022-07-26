@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const auth = function(req,res,next){
     try {
         let token = req.headers["authorization"];
-        console.log(token)
+        // console.log(token)
         if(typeof token === "undefined"){
             return res.status(400).send({status:false,message:"Token must be present in headers"})
         }
