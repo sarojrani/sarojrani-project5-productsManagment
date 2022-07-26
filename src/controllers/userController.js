@@ -260,18 +260,18 @@ const updateUser = async (req, res) => {
 
         if (!isValidObjectId(userId)) return res.status(400).send({ status: false, message: " Invalid userId" })
 
-        //check user is exist or not 
+        //check user is exist or not (changing)
         let checkUser = await userModel.findById(userId)
         if (!checkUser) return res.status(404).send({ status: false, message: "UserId doesn't exists" })
 
-        if (userId !== req.userId) return res.status(403).send({ status: false, message: "You are not authorized for update this user profile" })
+        if (userId !== req.userId) return res.status(403).send({ status: false, message: "Unauthorized access" })
 
         if (!(files && !Object.keys(data).length)) {
             if (!Object.keys(data).length)
                 return res.status(400).send({ status: false, message: "It seems like Nothing to update" })
         }
 
-
+        //if(!files.length) return res.status(400).send({status: false, message: "Please provide profileImage"})
 
         // Check fname is empty or not
         if (data.fname || data.fname === "") {
@@ -315,12 +315,6 @@ const updateUser = async (req, res) => {
             if (!data.phone.trim().match(/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/))
                 return res.status(400).send({ status: false, message: "Please enter valid phone" })
 
-            // if (!isValidPassword(data.password))
-            //     return res.status(400).send({
-            //         status: false,
-            //         message: "Please provide a valid password ,Password should be of 8 - 15 characters",
-            //     })
-
             //Check phone in DB
             const isRegisterPhone = await userModel.findOne({ phone: data.phone })
             if (isRegisterPhone)
@@ -342,110 +336,109 @@ const updateUser = async (req, res) => {
             if (!isValidPassword(data.password))
                 return res.status(400).send({
                     status: false,
-                    message: "Please provide a valid password ,Password should be of 8 - 15 characters",
-                })
+                    message: "Please provide a valid password ,Password should be of 8 - 15 characters",})
             let hash = await bcrypt.hash(data.password, saltRounds)
-            data.password = hash
-        }
-
-        if (data?.address || data?.address === "") {
-            if (!isValid(data.address)) return res.status(400).send({ status: false, Message: "Please provide your address" })
-
-            //parse the address to the JSON
-            data.address = JSON.parse(data.address)
-
-            if (typeof data.address != "object")
-                return res.status(400).send({ status: false, message: "Address must be in object" })
-
-            if (data?.address?.shipping) {
-                if (data?.address?.shipping?.street) {
-                    if (!isValid(data.address.shipping.street))
-                        return res.status(400).send({
-                            status: false,
-                            Message: "Please provide your street name in shipping address",
-                        })
+             data.password = hash
                 }
-                if (data?.address?.shipping?.city) {
-                    if (!isValid(data.address.shipping.city))
-                        return res.status(400).send({
-                            status: false,
-                            Message: "Please provide your city name in shipping address",
-                        })
+  
+      if (data?.address || data?.address === "") {
+                if (!isValid(data.address)) return res.status(400).send({ status: false, Message: "Please provide your address" })
+
+
+                data.address = JSON.parse(data.address)
+
+                if (typeof data.address != "object")
+                    return res.status(400).send({ status: false, message: "Address must be in object" })
+
+                if (data?.address?.shipping) {
+                    if (data?.address?.shipping?.street) {
+                        if (!isValid(data.address.shipping.street))
+                            return res.status(400).send({
+                                status: false,
+                                Message: "Please provide your street name in shipping address",
+                            })
+                    }
+                    if (data?.address?.shipping?.city) {
+                        if (!isValid(data.address.shipping.city))
+                            return res.status(400).send({
+                                status: false,
+                                Message: "Please provide your city name in shipping address",
+                            })
+                    }
+
+                    if (data?.address?.shipping?.pincode) {
+                        if (!isValid(data.address.shipping.pincode))
+                            return res.status(400).send({
+                                status: false,
+                                Message: "Please provide your pin code in shipping address",
+                            })
+                        if (!/^\d{6}$/.test(data.address.shipping.pincode))
+                            return res.status(400).send({
+                                status: false,
+                                message: "PinCode should in six digit Number",
+                            })
+                    }
                 }
 
-                if (data?.address?.shipping?.pincode) {
-                    if (!isValid(data.address.shipping.pincode))
-                        return res.status(400).send({
-                            status: false,
-                            Message: "Please provide your pin code in shipping address",
-                        })
-                    if (!/^\d{6}$/.test(data.address.shipping.pincode))
-                        return res.status(400).send({
-                            status: false,
-                            message: "PinCode should in six digit Number",
-                        })
+                if (data?.address?.billing) {
+                    if (data?.address?.billing?.street) {
+                        if (!isValid(data.address.billing.street))
+                            return res.status(400).send({
+                                status: false,
+                                Message: "Please provide your street name in billing address",
+                            })
+                    }
+                    if (data?.address?.billing?.city) {
+                        if (!isValid(data.address.billing.city))
+                            return res.status(400).send({
+                                status: false,
+                                Message: "Please provide your city name in billing address",
+                            })
+                    }
+                    if (data?.address?.billing?.pincode) {
+                        if (!isValid(data.address.billing.pincode))
+                            return res.status(400).send({
+                                status: false,
+                                Message: "Please provide your pin code in billing address",
+                            })
+                        if (!/^\d{6}$/.test(data.address.billing.pincode))
+                            return res.status(400).send({
+                                status: false,
+                                message: "PinCode should in six digit Number",
+                            })
+                    }
                 }
             }
 
-            if (data?.address?.billing) {
-                if (data?.address?.billing?.street) {
-                    if (!isValid(data.address.billing.street))
-                        return res.status(400).send({
-                            status: false,
-                            Message: "Please provide your street name in billing address",
-                        })
-                }
-                if (data?.address?.billing?.city) {
-                    if (!isValid(data.address.billing.city))
-                        return res.status(400).send({
-                            status: false,
-                            Message: "Please provide your city name in billing address",
-                        })
-                }
-                if (data?.address?.billing?.pincode) {
-                    if (!isValid(data.address.billing.pincode))
-                        return res.status(400).send({
-                            status: false,
-                            Message: "Please provide your pin code in billing address",
-                        })
-                    if (!/^\d{6}$/.test(data.address.billing.pincode))
-                        return res.status(400).send({
-                            status: false,
-                            message: "PinCode should in six digit Number",
-                        })
-                }
+            let oldUserData = await userModel.findById(userId)
+            let dataToBeUpdate = {
+                fname: data.fname,
+                lname: data.lname,
+                email: data.email,
+                phone: data.phone,
+                password: data.password,
+                profileImage: data.profileImage,
+                address: {
+                    shipping: {
+                        street: data.address?.shipping?.street || oldUserData.address.shipping.street,
+                        city: data.address?.shipping?.city || oldUserData.address.shipping.city,
+                        pincode: data.address?.shipping?.pincode || oldUserData.address.shipping.pincode,
+                    },
+                    billing: {
+                        street: data.address?.billing?.street || oldUserData.address.billing.street,
+                        city: data.address?.billing?.city || oldUserData.address.billing.city,
+                        pincode: data.address?.billing?.pincode || oldUserData.address.billing.pincode,
+                    },
+                },
             }
-        }
 
-        let oldUserData = await userModel.findById(userId)
-        let dataToBeUpdate = {
-            fname: data.fname,
-            lname: data.lname,
-            email: data.email,
-            phone: data.phone,
-            password: data.password,
-            profileImage: data.profileImage,
-            address: {
-                shipping: {
-                    street: data.address?.shipping?.street || oldUserData.address.shipping.street,
-                    city: data.address?.shipping?.city || oldUserData.address.shipping.city,
-                    pincode: data.address?.shipping?.pincode || oldUserData.address.shipping.pincode,
-                },
-                billing: {
-                    street: data.address?.billing?.street || oldUserData.address.billing.street,
-                    city: data.address?.billing?.city || oldUserData.address.billing.city,
-                    pincode: data.address?.billing?.pincode || oldUserData.address.billing.pincode,
-                },
-            },
+            const updateData = await userModel.findByIdAndUpdate({ _id: userId }, dataToBeUpdate, { new: true })
+            return res.status(200).send({ status: true, message: "User profile updated", data: updateData })
+        } catch (error) {
+            return res.status(500).send({ status: false, message: error.message })
         }
-
-        const updateData = await userModel.findByIdAndUpdate({ _id: userId }, dataToBeUpdate, { new: true })
-        return res.status(200).send({ status: true, message: "User profile updated", data: updateData })
-    } catch (error) {
-        return res.status(500).send({ status: false, message: error.message })
     }
-}
 
 
 
-module.exports = { userRegister, loginUser, getUserProfile,updateUser }
+module.exports = { userRegister, loginUser, getUserProfile, updateUser }
