@@ -75,7 +75,7 @@ const createProducts = async function (req, res) {
                 return res.status(400).send({ status: false, message: "Installment should be in number and not empty" })
             }
         }
-        if(style|| style==""){
+        if(style|| style===""){
             if(!isValid(style))
             return res.status(400).send({status:false,message:"please provide style"})
         }
