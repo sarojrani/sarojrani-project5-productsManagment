@@ -113,7 +113,103 @@ const createProducts = async function (req, res) {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
-// ////////////////////////////////////------Get Products by Id ------------///////////////////////////////////////////////////////////////////////////
+///////////////////////-------------------------Get Product by Queryparams----------//////////////////////////////
+const getProduct = async function(req,res){
+    try {
+        let data = req.query;
+        let filter = {isDeleted:false}
+
+        if(data.name || data.name===""){
+            if(!isValid(data.name)){
+                return res.status(400).send({status:false,message:"Enter the product name properly"})
+            }
+        
+        filter.title = {};
+        filter.title=data.name;
+        // console.log(filter.title)
+        }
+        if(data.size || data.size===""){
+            if(!isValid(data.size)){
+                return res.status(400).send({status:false,message:"Give a proper size of products"})
+            }
+            if(data.size){
+                var size = data.size.toUpperCase().split(",")
+                if(size.length===0){
+                    return res.status(400).send({status:false,message:"please provide the product size"})
+                }
+                let enumSize = ["S", "XS","M","X", "L","XXL", "XL"]
+                for(let i=0;i<size.length;i++){
+                    if(!enumSize.includes(size[i])){
+                        return res.status(400).send({status:false,message:`Sizes should be ${enumArr} value (with multiple value please give saperated by comma)`})
+                    }
+                }
+
+            }
+            filter.availableSizes={};
+            filter.availableSizes["$in"] =size
+            // console.log(filter.availableSizes)
+        }
+        if(data.priceGreaterThan===""||data.priceLessThan===""){
+            return res.status(400).send({status:false,message:"price can not be empty"})
+        }
+        if(data.priceGreaterThan||data.priceLessThan){
+            if(data.priceGreaterThan){
+                if(!isValid(data.priceGreaterThan)){
+                    return res.status(400).send({status:false,message:"pricegreterthen can not be empty"})
+                }
+                let Gprice = Number(data.priceGreaterThan)
+                if(!/^\d*\.?\d*$/.test(Gprice)){
+                    return res.status(400).send({status:false,message:"price greaterthan should be in a number formate "})
+                }
+            }
+            if(data.priceLessThan){
+                if(data.priceLessThan){
+                    if(!isValid(data.priceLessThan)){
+                        return res.status(400).send({status:false,message:"pricelessthen can not be empty"})
+                    }
+                    let Lprice = Number(data.priceLessThan)
+                    if(!/^\d*\.?\d*$/.test(Lprice)){
+                        return res.status(400).send({status:false,message:"price lessthan should be in a number formate "})
+                    }
+                }
+               
+                }
+                console.log(data.priceGreaterThan)
+                filter.price = {};
+                if(data.priceGreaterThan && data.priceLessThan){
+                    filter.price["$gt"] = data.priceGreaterThan
+                    filter.price["$lt"] = data.priceLessThan
+                }
+                else{
+                    if(data.priceGreaterThan) filter.price["$gt"]=data.priceGreaterThan;
+                    if(data.priceLessThan) filter.price["$lt"] = data.priceLessThan;
+                }
+
+            
+        }
+
+        let sortedPrice = data.priceSort;
+        if(sortedPrice){
+            if(!sortedPrice.match(/^(1|-1)$/)){
+                return res.status(400).send({status:false,message:"priceSort should be 1 or -1"})
+            }
+        }
+
+        
+        let get = await productModel.find(filter).sort({price:sortedPrice})
+        if(get){
+            return res.status(200).send({status:true,message:"success",data:get})
+        }
+        return res.status(400).send({status:false,message:"No product found"})
+
+        
+    } catch (error) {
+        return res.status(500).send({status:false,message:error.message})
+        
+    }
+}
+
+//////////////////////////////////------Get Products by Id ------------///////////////////////////////////////////////////////////////////////////
 const getProductById = async function(req, res){
     try {
       let productId = req.params.productId
@@ -269,4 +365,4 @@ const updateProduct = async function(req, res) {
 } 
 
 
-module.exports = { createProducts,getProductById,updateProduct,deleteProductById }
+module.exports = { createProducts,getProductById,updateProduct,deleteProductById,getProduct }
