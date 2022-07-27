@@ -11,6 +11,13 @@ router.get("/user/:userId/profile",middleware,userController.getUserProfile)
 router.put('/user/:userId/profile',middleware, userController.updateUser)
 /*********************************For Products *********************************************/
 router.post('/products', productController.createProducts);
+router.get('/products/:productId', productController.getProductById);
+router.delete("/products/:productId",productController.deleteProductById)
+
+
+router.put('/products/:productId', productController.updateProduct);
+
+
 
 
 
