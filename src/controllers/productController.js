@@ -201,7 +201,7 @@ const getProduct = async function (req, res) {
 
         let sortedPrice = data.priceSort;
         if (sortedPrice) {
-            if (!sortedPrice.match(/^(1|-1)$/)) {
+            if (!sortedPrice.trim().match(/^(1|-1)$/)) {
                 return res.status(400).send({ status: false, message: "priceSort should be 1 or -1" })
             }
         }
