@@ -131,7 +131,7 @@ const getProduct = async function (req, res) {
             }
 
             filter.title = {};
-            filter.title["$regex"] = data.name;
+            filter.title["$regex"] = data.name.trim();
             
             // console.log(filter.title)
         }
