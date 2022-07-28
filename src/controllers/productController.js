@@ -188,8 +188,8 @@ const getProduct = async function (req, res) {
             console.log(data.priceGreaterThan)
             filter.price = {};
             if (data.priceGreaterThan && data.priceLessThan) {
-                filter.price["$gt"] = data.priceGreaterThan
-                filter.price["$lt"] = data.priceLessThan
+                filter.price["$gt"] = data.priceGreaterThan.trim()
+                filter.price["$lt"] = data.priceLessThan.trim()
             }
             else {
                 if (data.priceGreaterThan) filter.price["$gt"] = data.priceGreaterThan.trim();
