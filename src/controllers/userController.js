@@ -3,13 +3,7 @@ const bcrypt = require("bcrypt")
 const uploadFile = require("./awsController")
 const mongoose = require("mongoose")
 const jwt = require("jsonwebtoken")
-const {
-    isValid,
-    isValidObjectId,
-    isValidRequestBody,
-    isValidPassword,
-    isValidFiles,
-} = require("../validations/validation")
+const {isValid,isValidObjectId,isValidRequestBody,isValidPassword,isValidFiles,} = require("../validations/validation")
 let saltRounds = 10
 
 /*************Create User (1st Api)*******************************/

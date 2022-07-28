@@ -3,13 +3,7 @@ const productModel = require("../models/productModel")
 const bcrypt = require("bcrypt")
 const uploadFile = require("./awsController")
 const mongoose = require("mongoose")
-const {
-    isValid,
-    isValidObjectId,
-    isValidRequestBody,
-    isValidPassword,
-    isValidFiles,
-} = require("../validations/validation")
+const {isValid, isValidObjectId,isValidRequestBody,isValidPassword,isValidFiles,} = require("../validations/validation")
 ///////---------------------------CREATE PRODUCTS---------------//////////////////////////////
 
 const createProducts = async function (req, res) {
@@ -372,7 +366,7 @@ const deleteProductById = async function (req, res) {
         res.status(200).send({ status: true, message: "Success", data: deletedProduct })
 
     } catch (error) {
-        return res.status(500).send({ status: false, message: err.message })
+        return res.status(500).send({ status: false, message: error.message })
     }
 }
 
