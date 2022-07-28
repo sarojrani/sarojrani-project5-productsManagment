@@ -41,7 +41,7 @@ const userRegister = async (req, res) => {
             })
 
         if (!isValid(lname)) return res.status(400).send({ status: false, Message: "Please provide your last name" })
-        if (!lname.trim().match(/^[a-zA-Z ]{2,30}$/))
+        if (!lname.trim().match(/^[a-zA-Z ]{1,30}$/))
             return res.status(400).send({
                 status: false,
                 message: "lastname should only contain alphabet",

@@ -33,24 +33,24 @@ const createProducts = async function (req, res) {
         if (!isValid(price)) {
             return res.status(400).send({ status: false, message: "Please provide products's price" })
         }
-        if (!price.match(/^\d+(,\d{1,2})?$/)) {
+        if (!price.trim().match(/^\d+(,\d{1,2})?$/)) {
             return res.status(400).send({ status: false, message: "Price should be in number" })
         }
         if (!isValid(currencyId)) {
             return res.status(400).send({ status: false, message: "please provide currencyId" })
         }
-        if (!currencyId.match(/^(INR|inr|Inr)$/)) {
+        if (!currencyId.trim().match(/^(INR|inr|Inr)$/)) {
             return res.status(400).send({ status: false, message: "currencyId should be in Indian currency format" })
         }
         if (!isValid(currencyFormat)) {
             return res.status(400).send({ status: false, message: "Please provide currency format" })
         }
-        if (currencyFormat !== '₹') {
+        if (currencyFormat.trim() !== '₹') {
             return res.status(400).send({ status: false, message: "currency format only in '₹' format" })
         }
         if (isFreeShipping || isFreeShipping === "") {
 
-            if (!isFreeShipping.match(/^(true|false)$/)) {
+            if (!isFreeShipping.trim().match(/^(true|false)$/)) {
                 return res.status(400).send({ status: false, message: "Freeshiping is only boolean value" })
             }
         }
@@ -58,7 +58,8 @@ const createProducts = async function (req, res) {
             return res.status(400).send({ status: false, message: "Please provide atleast one size" })
         }
         if (availableSizes) {
-            var availableSize = availableSizes.toUpperCase().split(",")
+            var availableSize= availableSizes.replace(/ +/g, "");
+            var availableSize = availableSize.toUpperCase().split(",")
             if (availableSize.length === 0) {
                 return res.status(400).send({ status: false, message: "Please provide atleast one size of the products" })
             }
@@ -115,7 +116,7 @@ const createProducts = async function (req, res) {
 
 
     } catch (error) {
-        return res.status(500).send({ status: false, message: err.message })
+        return res.status(500).send({ status: false, message: error.message })
     }
 }
 ///////////////////////-------------------------Get Product by Queryparams----------//////////////////////////////
@@ -130,7 +131,8 @@ const getProduct = async function (req, res) {
             }
 
             filter.title = {};
-            filter.title = data.name;
+            filter.title["$regex"] = data.name;
+            
             // console.log(filter.title)
         }
         if (data.size || data.size === "") {
@@ -138,14 +140,18 @@ const getProduct = async function (req, res) {
                 return res.status(400).send({ status: false, message: "Give a proper size of products" })
             }
             if (data.size) {
-                var size = data.size.toUpperCase().split(",")
+                var size = data.size.replace(/ +/g, "");
+                // console.log(size)
+                var size = size.toUpperCase().split(",")
+                // var size = size.trim()
+                 console.log(size)
                 if (size.length === 0) {
                     return res.status(400).send({ status: false, message: "please provide the product size" })
                 }
                 let enumSize = ["S", "XS", "M", "X", "L", "XXL", "XL"]
                 for (let i = 0; i < size.length; i++) {
                     if (!enumSize.includes(size[i])) {
-                        return res.status(400).send({ status: false, message: `Sizes should be ${enumArr} value (with multiple value please give saperated by comma)` })
+                        return res.status(400).send({ status: false, message: `Sizes should be ${enumSize} value (with multiple value please give saperated by comma)` })
                     }
                 }
 
