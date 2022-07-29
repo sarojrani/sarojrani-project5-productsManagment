@@ -198,11 +198,11 @@ const getProduct = async function (req, res) {
             if (!sortedPrice.trim().match(/^(1|-1)$/)) {
                 return res.status(400).send({ status: false, message: "priceSort should be 1 or -1" })
             }
-            var sort = sortedPrice.trim()
+            var sorted = sortedPrice.trim()
         }
 
 
-        let get = await productModel.find(filter).sort({ price: sort })
+        let get = await productModel.find(filter).sort({ price: sorted })
         if (get) {
             return res.status(200).send({ status: true, message: "success", data: get })
         }
