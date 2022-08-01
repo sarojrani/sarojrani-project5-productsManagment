@@ -4,6 +4,7 @@ const middleware = require("../middleware/auth")
 const productController = require("../controllers/productController")
 const userController = require("../controllers/userController")
 const cartController = require("../controllers/cartController")
+const orderController = require("../controllers/orderController")
 
 /*********************For User**************************************************************/
 router.post('/register', userController.userRegister);
@@ -23,6 +24,8 @@ router.post("/users/:userId/cart",middleware,cartController.createCart)
 router.put('/users/:userId/cart',middleware, cartController.updateCart)
 router.get("/users/:userId/cart",middleware,cartController.getCart)
 router.delete("/users/:userId/cart",middleware,cartController.deleteCart)
+
+router.post("/users/:userId/orders",middleware,orderController.createOrder)
 
 
 
