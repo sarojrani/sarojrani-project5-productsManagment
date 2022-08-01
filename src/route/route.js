@@ -20,6 +20,7 @@ router.delete("/products/:productId",productController.deleteProductById)
 router.put('/products/:productId', productController.updateProduct);
 /******************************For cart********************************************************/
 router.post("/users/:userId/cart",middleware,cartController.createCart)
+router.put('/users/:userId/cart',middleware, cartController.updateCart)
 router.get("/users/:userId/cart",middleware,cartController.getCart)
 router.delete("/users/:userId/cart",middleware,cartController.deleteCart)
 
