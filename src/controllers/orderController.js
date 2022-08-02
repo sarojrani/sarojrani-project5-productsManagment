@@ -79,4 +79,42 @@ const createOrder = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message })
     }
 }
-module.exports = {createOrder}
+//////////////////////////////////////////////------Update Order----------///////////////////////////////////////////////////////////
+const updateOrder = async function(req,res){
+    try {
+        let userId = req.params.userId;
+        let data = req.body;
+        let orderId = data.orderId;
+
+        if(!isValidObjectId(userId)){
+            return res.status(400).send({status:false,message:"Invalid UserId"})
+        }
+        if(userId !==req.userId){
+            return res.status(403).send({status:false,message:"Authorization failed"})
+        }
+        if(!isValidRequestBody(data)){
+            return res.status(400).send({status:false,message:"Please provide data for cancled your order"})
+        }
+        if(!isValid(orderId)){
+            return res.status(400).send({status:false,message:"Please provide your orderId correctly"})
+        }
+        if(!isValidObjectId(orderId)){
+            return res.status(400).send({status:false,message:"Invalid orderId"})
+        }
+        let findOrder = await orderModel.findOne({userId:userId,_id:orderId,isDeleted:false})
+        if(!findOrder){
+            return res.status(404).send({status:false,message:"order is not found for this user"})
+        }
+        if(findOrder.cancellable !==true){
+            return res.status(400).send({status:false,message:"You can not cancelled this order"})
+        }
+        let updateOrder = await orderModel.findOneAndUpdate({_id:orderId},{status:"cancelled",isDeleted:true,deletedAt:Date.now()},{new:true})
+        return res.status(200).send({status:true,message:"Success",data:updateOrder})
+
+
+    } catch (error) {
+        return res.status(500).send({status:false,message:error.message})
+    }
+}
+
+module.exports = {createOrder,updateOrder}
