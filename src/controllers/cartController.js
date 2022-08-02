@@ -163,7 +163,7 @@ const updateCart = async function (req, res) {
 
     if (removeProduct == 1) {
       let updateCart = await cartModel.findOneAndUpdate({ _id: cartId, "items.productId": productId }, { $inc: { totalPrice: -product.price, "items.$.quantity": -1 } }, { new: true })
-      console.log(updateCart.items)
+      // console.log(updateCart.items)
 
       //  return res.status(200).send({status:true,message:"success",data:updateCart})
 
