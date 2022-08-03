@@ -1,7 +1,6 @@
 const userModel = require("../models/userModel")
 const bcrypt = require("bcrypt")
 const uploadFile = require("./awsController")
-const mongoose = require("mongoose")
 const jwt = require("jsonwebtoken")
 const {isValid,isValidObjectId,isValidRequestBody,isValidPassword,isValidFiles,} = require("../validations/validation")
 let saltRounds = 10
