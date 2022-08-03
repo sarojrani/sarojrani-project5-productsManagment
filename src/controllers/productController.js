@@ -1,9 +1,6 @@
-const userModel = require("../models/userModel")
 const productModel = require("../models/productModel")
-const bcrypt = require("bcrypt")
 const uploadFile = require("./awsController")
-const mongoose = require("mongoose")
-const {isValid, isValidObjectId,isValidRequestBody,isValidPassword,isValidFiles,} = require("../validations/validation")
+const {isValid, isValidObjectId,isValidRequestBody,isValidFiles,} = require("../validations/validation")
 ///////---------------------------CREATE PRODUCTS---------------//////////////////////////////
 
 const createProducts = async function (req, res) {
@@ -138,7 +135,7 @@ const getProduct = async function (req, res) {
                 // console.log(size)
                 var size = size.toUpperCase().split(",")
                 // var size = size.trim()
-                 console.log(size)
+                //  console.log(size)
                 if (size.length === 0) {
                     return res.status(400).send({ status: false, message: "please provide the product size" })
                 }
@@ -304,6 +301,7 @@ const updateProduct = async function (req, res) {
 
         if (data.style || data.style === "") {
             if (!isValid(data.style)) return res.status(400).send({ status: false, message: "Please provide style" })
+            
         }
 
 

@@ -5,7 +5,7 @@ const auth = function(req,res,next){
         let token = req.headers["authorization"];
         // console.log(token)
         if(typeof token === "undefined"){
-            return res.status(400).send({status:false,message:"Token must be present in headers"})
+            return res.status(401).send({status:false,message:"Authentication fail(please provide token in header)"})
         }
         const bearer = token.split(" ");
         const bearerToken = bearer[1];

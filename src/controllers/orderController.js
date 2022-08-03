@@ -54,7 +54,7 @@ const createOrder = async function (req, res) {
             if(!isValid(cancellable)){
                 return res.status(400).send({status:false,message:"please provide cancelation property "})
             }
-            var cancel = cancellable.trim().toLowerCase();
+            var cancel = cancellable.toString().trim().toLowerCase();
             if(!/^(true|false)$/.test(cancel)){
                     return res.status(400).send({status:false,message:"cancellable should be a boolean value"})
             }
@@ -72,6 +72,7 @@ const createOrder = async function (req, res) {
         orderDetails.status = stat
 
         let orderCreate = await orderModel.create(orderDetails)
+        
         return res.status(201).send({status:true,message:"success",data:orderCreate})
 
 

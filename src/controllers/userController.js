@@ -60,7 +60,7 @@ const userRegister = async (req, res) => {
             return res.status(400).send({ status: false, message: "Please enter valid email" })
 
         if (!phone.trim().match(phoneRegex))
-            return res.status(400).send({ status: false, message: "Please enter valid phone number" })
+            return res.status(400).send({ status: false, message: "Please enter valid pan -Indian phone number" })
 
         if (!isValidPassword(password))
             return res.status(400).send({
@@ -227,6 +227,9 @@ const getUserProfile = async function (req, res) {
         if (!isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "Please enter a valid user Id" })
         }
+        if(userId!==req.userId){
+            return res.status(403).send({status:false,message:"Authorization fail"})
+        }
 
         let findUser = await userModel.findById({ _id: userId })
 
@@ -278,6 +281,9 @@ const updateUser = async (req, res) => {
                     message: "FirstName should only contain alphabet",
                 })
         }
+        // if(!isValidFiles(files)){
+        //     return res.status(400).send({status:false,message:"Please provide profile image"})
+        // }
 
         //check if lname is present or Not
         if (data.lname || data.lname === "") {
@@ -318,9 +324,10 @@ const updateUser = async (req, res) => {
                     message: "phone number is already registered",
                 })
         }
+        // console.log(files.length)
 
         if (isValidFiles(files)) {
-            if (files.length === 0) return res.status(400).send({ status: false, message: "Please upload profileImage" })
+            if (files.length==0) return res.status(400).send({ status: false, message: "Please upload profileImage" })
             const profilePicture = await uploadFile(files[0])
             data.profileImage = profilePicture
         }
