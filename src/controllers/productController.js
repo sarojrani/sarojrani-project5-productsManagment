@@ -201,7 +201,7 @@ const getProduct = async function (req, res) {
 
         let get = await productModel.find(filter).sort({ price: sorted })
         if (get) {
-            return res.status(200).send({ status: true, message: "success", data: get })
+            return res.status(200).send({ status: true, message: "Success", data: get })
         }
         return res.status(400).send({ status: false, message: "No product found" })
 

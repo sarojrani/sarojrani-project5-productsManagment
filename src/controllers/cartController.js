@@ -175,7 +175,7 @@ const updateCart = async function (req, res) {
     if (removeProduct == 0) {
       let quantity = cart.items.filter((item) => item.productId.toString() === productId)[0].quantity
       let result = await cartModel.findOneAndUpdate({ _id: cartId, "items.productId": productId }, { $inc: { totalPrice: -(product.price * quantity), totalItems: -1 }, $pull: { items: { productId: productId } } }, { new: true })
-      return res.status(200).send({ status: true, status: false, data: result })
+      return res.status(200).send({ status: true, message:"Success", data: result })
 
     }
 
