@@ -168,9 +168,9 @@ const updateCart = async function (req, res) {
       let quantity = updateCart.items.filter((item) => item.productId.toString() === productId)[0].quantity
       if (quantity == 0) {
         let result = await cartModel.findOneAndUpdate({ _id: cartId, "items.prductId": productId }, { $inc: { totalItems: -1 }, $pull: { items: { productId: productId } } }, { new: true })
-        return res.status(200).send({ status: true, message: "success", data: result })
+        return res.status(200).send({ status: true, message: "Success", data: result })
       }
-      return res.status(200).send({ status: true, message: "success", data: updateCart })
+      return res.status(200).send({ status: true, message: "Success", data: updateCart })
     }
     if (removeProduct == 0) {
       let quantity = cart.items.filter((item) => item.productId.toString() === productId)[0].quantity
