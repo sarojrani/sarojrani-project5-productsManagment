@@ -76,7 +76,7 @@ const createOrder = async function (req, res) {
         existCart.totalPrice = 0
         existCart.save()
 
-        return res.status(201).send({ status: true, message: "success", data: orderCreate })
+        return res.status(201).send({ status: true, message: "Success", data: orderCreate })
 
 
     } catch (error) {

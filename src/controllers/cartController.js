@@ -225,7 +225,7 @@ const deleteCart = async function (req, res) {
     if (!existCart) {
       return res.status(404).send({ status: false, message: "Cart is not exist for this user" })
     }
-    return res.status(204).send({ status: true, message: "success", data: existCart })
+    return res.status(204).send({ status: true, message: "Success", data: existCart })
 
   } catch (error) {
     return res.status(500).send({ status: false, message: error.message })
