@@ -137,6 +137,9 @@ const updateOrder = async function (req, res) {
         if (findOrder.cancellable !== true) {
             return res.status(400).send({ status: false, message: "You can not cancelled this order" })
         }
+        if(findOrder.status=="completed"){
+            return res.status(400).send({status:false,message:"This order already completed you can not cancel the order"})
+        }
         if (status == "cancelled" || status == "Cancelled") {
             let updateOrder = await orderModel.findOneAndUpdate({ _id: orderId }, { status: "cancelled" }, { new: true })
             return res.status(200).send({ status: true, message: "Success", data: updateOrder })
