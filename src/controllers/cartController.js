@@ -72,33 +72,38 @@ const createCart = async function (req, res) {
 
     // console.log(arr.length)
     for (let i = 0; i < arr.length; i++) {
+      console.log(arr[i].productId)
+      console.log(productId)
 
       if (arr[i].productId.toString() == productId) {
 
 
         arr[i].quantity = arr[i].quantity + 1
 
-        var updateCart = await cartModel.findOneAndUpdate({ userId: userId }, { items: arr, totalPrice: cart.totalPrice + product.price, totalItems: arr.length }, { new: true })
-
+        let updateCart = await cartModel.findOneAndUpdate({ userId: userId }, { items: arr, totalPrice: cart.totalPrice + product.price, totalItems: arr.length }, { new: true })
+        return res.status(201).send({ status: true, message: "Success", data: updateCart })
       }
+    }
 
 
 
 
-      else {
+    
         let newCart = {
           $addToSet: { items: { productId: product._id, quantity: 1 } },
           totalPrice: product.price + cart.totalPrice,
           totalItems: cart.totalItems + 1
         }
-        updateCart = await cartModel.findOneAndUpdate({ userId: userId }, newCart, { new: true })
-
-      }
-
+       let  updateCart = await cartModel.findOneAndUpdate({ userId: userId }, newCart, { new: true })
+       return res.status(201).send({ status: true, message: "Success", data: updateCart })
 
 
-    }
-    return res.status(201).send({ status: true, message: "Success", data: updateCart })
+      
+
+
+
+    
+    // return res.status(201).send({ status: true, message: "Success", data: updateCart })
 
 
 
